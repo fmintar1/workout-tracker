@@ -10,6 +10,7 @@ function App() {
         <Exercise name="Dumbbell Press" />
         <Exercise name="Incline Dumbbell Press" />
         <Exercise name="Cable Press" />
+        <Exercise name="Skull Crusher" />
       </div>
     </div>
   );
