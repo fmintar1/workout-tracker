@@ -8,8 +8,9 @@ import java.util.List;
 
 
 @Repository
-public interface WTRepository extends JpaRepository <WTModel, Integer>{
+public interface WTRepository extends JpaRepository <WTModel, Long>{
     
     List<WTModel> findByCategory(String category);
     WTModel findByWorkoutName(String workoutName);
+    void deleteByWorkoutName(String workoutName);
 }

@@ -1,21 +1,22 @@
 package com.backend.workout_tracker_spring.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.workout_tracker_spring.model.WTModel;
 import com.backend.workout_tracker_spring.repository.WTRepository;
 
 @Service
+@Transactional
 public class WTService {
     
     @Autowired
     private WTRepository wtRepository;
 
-    public List<WTModel> getAllWTModels () {
+    public List<WTModel> getAllWorkouts () {
         return wtRepository.findAll();
     }
 
@@ -25,5 +26,22 @@ public class WTService {
 
     public WTModel getWorkoutByName (String workoutName) {
         return wtRepository.findByWorkoutName(workoutName);
+    }
+
+    public WTModel updateWorkoutByName(String oldWorkoutName, WTModel wtModel) {
+        WTModel oldWtModel = this.getWorkoutByName(oldWorkoutName);
+        oldWtModel.setCategory(wtModel.getCategory());
+        oldWtModel.setWorkoutName(wtModel.getWorkoutName());
+        oldWtModel.setWeight(wtModel.getWeight());
+        oldWtModel.setReps(wtModel.getReps());
+        return wtRepository.save(oldWtModel);
+    }
+
+    public WTModel saveWorkout(WTModel wtModel) {
+        return wtRepository.save(wtModel);
+    }
+
+    public void deleteWorkoutByName(String workoutName) {
+        wtRepository.deleteByWorkoutName(workoutName);
     }
 }
