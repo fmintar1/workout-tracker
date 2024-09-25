@@ -69,7 +69,7 @@ public class WTServiceTest {
     @Test
     public void getWorkoutByCategory() {
         //Given
-        when(wtRepository.findByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel3));
+        when(wtService.getWorkoutByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel3));
         //When
         List<WTModel> actual = wtService.getWorkoutByCategory("TestCategory");
         //Then
@@ -80,7 +80,7 @@ public class WTServiceTest {
     @Test
     public void getWorkoutByName() {
         //Given
-        when(wtRepository.findByWorkoutName("TestWorkoutName")).thenReturn(wtModel);
+        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel);
         //When
         WTModel actual = wtService.getWorkoutByName("TestWorkoutName");
         //Then
@@ -90,7 +90,7 @@ public class WTServiceTest {
     @Test
     public void getAllWorkoutsTest() {
         //Given
-        when(wtRepository.findAll()).thenReturn(List.of(wtModel, wtModel2, wtModel3));
+        when(wtService.getAllWorkouts()).thenReturn(List.of(wtModel, wtModel2, wtModel3));
         //When
         List<WTModel> actual = wtService.getAllWorkouts();
         //Then
@@ -100,8 +100,9 @@ public class WTServiceTest {
     @Test
     public void updateWorkoutByNameTest() {
         //Given
-        when(wtRepository.findByWorkoutName("TestWorkoutName")).thenReturn(wtModel);
-        when(wtRepository.save(wtModel)).thenReturn(wtModel4);
+        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel);
+        when(wtService.saveWorkout(wtModel)).thenReturn(wtModel);
+        when(wtService.updateWorkoutByName("TestWorkoutName", wtModel)).thenReturn(wtModel4);
         //When
         WTModel actual = wtService.updateWorkoutByName("TestWorkoutName", wtModel4);
         //Then
@@ -114,7 +115,7 @@ public class WTServiceTest {
     @Test
     public void saveWorkoutTest() {
         //Given
-        when(wtRepository.save(wtModel)).thenReturn(wtModel);
+        when(wtService.saveWorkout(wtModel)).thenReturn(wtModel);
         //When
         WTModel actual = wtService.saveWorkout(wtModel);
         //Then
@@ -130,6 +131,6 @@ public class WTServiceTest {
         wtService.deleteWorkoutByName("TestCategory");
 
         //Then
-        Mockito.verify(wtRepository).deleteWorkoutByName("TestCategory");
+        Mockito.verify(wtRepository).deleteByWorkoutName("TestCategory");
     }
 }
