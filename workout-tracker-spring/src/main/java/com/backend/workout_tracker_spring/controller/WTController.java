@@ -6,9 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +22,6 @@ import com.backend.workout_tracker_spring.service.WTService;
 @RestController
 @RequestMapping("/workouts")
 public class WTController {
-
-    private static final Logger logger = LoggerFactory.getLogger(WTController.class);
 
     @Autowired
     private WTService wtService;
@@ -49,12 +46,11 @@ public class WTController {
 
     @PutMapping("/update/{workoutName}")
     public ResponseEntity<WTModel> updateWorkoutByName(@PathVariable String workoutName, @RequestBody WTModel wtModel) {
-        WTModel updatedModel = wtService.updateWorkoutByName(workoutName, wtModel);
-        if (updatedModel != null) {
-            return new ResponseEntity<>(updatedModel, HttpStatus.OK);
-        } else {
+        WTModel oldWtModel = wtService.getWorkoutByName(workoutName);
+        if (oldWtModel == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(wtService.updateWorkoutByName(workoutName, wtModel), HttpStatus.OK);
     }
 
     @PostMapping("/post")
@@ -69,5 +65,15 @@ public class WTController {
             e.printStackTrace(); // Log the exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @DeleteMapping("/delete/{workoutName}")
+    public ResponseEntity<Void> deleteWorkout(@PathVariable String workoutName) {
+        WTModel wtModel = wtService.getWorkoutByName(workoutName);
+        if (wtModel == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        wtService.deleteWorkoutByName(workoutName);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

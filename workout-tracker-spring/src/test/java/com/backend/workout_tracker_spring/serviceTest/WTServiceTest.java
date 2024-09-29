@@ -7,24 +7,19 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-
 import com.backend.workout_tracker_spring.model.WTModel;
 import com.backend.workout_tracker_spring.repository.WTRepository;
 import com.backend.workout_tracker_spring.service.WTService;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class WTServiceTest {
+class WTServiceTest {
     
     @MockBean
     private WTRepository wtRepository;
@@ -67,9 +62,9 @@ public class WTServiceTest {
     }
 
     @Test
-    public void getWorkoutByCategory() {
+    void getWorkoutByCategory() {
         //Given
-        when(wtService.getWorkoutByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel3));
+        when(wtRepository.findByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel3));
         //When
         List<WTModel> actual = wtService.getWorkoutByCategory("TestCategory");
         //Then
@@ -78,9 +73,9 @@ public class WTServiceTest {
     }
 
     @Test
-    public void getWorkoutByName() {
+    void getWorkoutByName() {
         //Given
-        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel);
+        when(wtRepository.findByWorkoutName("TestWorkoutName")).thenReturn(wtModel);
         //When
         WTModel actual = wtService.getWorkoutByName("TestWorkoutName");
         //Then
@@ -88,9 +83,9 @@ public class WTServiceTest {
     }
 
     @Test
-    public void getAllWorkoutsTest() {
+    void getAllWorkoutsTest() {
         //Given
-        when(wtService.getAllWorkouts()).thenReturn(List.of(wtModel, wtModel2, wtModel3));
+        when(wtRepository.findAll()).thenReturn(List.of(wtModel, wtModel2, wtModel3));
         //When
         List<WTModel> actual = wtService.getAllWorkouts();
         //Then
@@ -98,10 +93,10 @@ public class WTServiceTest {
     }
 
     @Test
-    public void updateWorkoutByNameTest() {
+    void updateWorkoutByNameTest() {
         //Given
-        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel);
-        when(wtService.saveWorkout(wtModel)).thenReturn(wtModel);
+        when(wtRepository.findByWorkoutName("TestWorkoutName")).thenReturn(wtModel);
+        when(wtRepository.save(wtModel)).thenReturn(wtModel);
         when(wtService.updateWorkoutByName("TestWorkoutName", wtModel)).thenReturn(wtModel4);
         //When
         WTModel actual = wtService.updateWorkoutByName("TestWorkoutName", wtModel4);
@@ -113,9 +108,9 @@ public class WTServiceTest {
     }
 
     @Test
-    public void saveWorkoutTest() {
+    void saveWorkoutTest() {
         //Given
-        when(wtService.saveWorkout(wtModel)).thenReturn(wtModel);
+        when(wtRepository.save(wtModel)).thenReturn(wtModel);
         //When
         WTModel actual = wtService.saveWorkout(wtModel);
         //Then
@@ -126,7 +121,7 @@ public class WTServiceTest {
     }
 
     @Test
-    public void deleteWorkoutTest() {
+    void deleteWorkoutTest() {
         //When
         wtService.deleteWorkoutByName("TestCategory");
 

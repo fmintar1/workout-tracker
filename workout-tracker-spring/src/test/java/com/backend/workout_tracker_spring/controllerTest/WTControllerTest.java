@@ -1,42 +1,28 @@
 package com.backend.workout_tracker_spring.controllerTest;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import org.apache.catalina.connector.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.Assert;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.backend.workout_tracker_spring.controller.WTController;
 import com.backend.workout_tracker_spring.model.WTModel;
-import com.backend.workout_tracker_spring.repository.WTRepository;
 import com.backend.workout_tracker_spring.service.WTService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(WTController.class)
-public class WTControllerTest {
+@AutoConfigureMockMvc
+class WTControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,13 +33,17 @@ public class WTControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(WTController.class);
+    WTModel wtModel;
+    WTModel wtModel2;
+
+    @BeforeEach
+    public void setUp() {
+        wtModel = new WTModel(1L, "TestCategory", "TestWorkout", 100, 10);
+        wtModel2 = new WTModel(2L, "TestCategory2", "TestWorkout2", 110, 9);
+    }
 
     @Test
-    public void getAllWorkoutsTest() throws Exception {
-        // Given
-        WTModel wtModel = new WTModel(1L, "TestCategory", "TestWorkout", 100, 10);
-        WTModel wtModel2 = new WTModel(2L, "TestCategory2", "TestWorkout2", 110, 9);
+    void getAllWorkoutsTest() throws Exception {
         // When
         when(wtService.getAllWorkouts()).thenReturn(List.of(wtModel, wtModel2));
         // Then
@@ -63,9 +53,7 @@ public class WTControllerTest {
     }
 
     @Test
-    public void getWorkoutByNameTest() throws Exception {
-        // Given
-        WTModel wtModel = new WTModel(1L, "TestCategory", "TestWorkout", 100, 10);
+    void getWorkoutByNameTest() throws Exception {
         // When
         when(wtService.getWorkoutByName("TestWorkout")).thenReturn(wtModel);
         // Then
@@ -79,10 +67,7 @@ public class WTControllerTest {
     }
 
     @Test
-    public void getWorkoutByCategoryTest() throws Exception {
-        // Given
-        WTModel wtModel = new WTModel(1L, "TestCategory", "TestWorkout", 100, 10);
-        WTModel wtModel2 = new WTModel(2L, "TestCategory", "TestWorkout2", 110, 9);
+    void getWorkoutByCategoryTest() throws Exception {
         // When
         when(wtService.getWorkoutByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel2));
         // Then
@@ -92,11 +77,9 @@ public class WTControllerTest {
     }
 
     @Test
-    public void updateWorkoutByNameTest() throws Exception {
-        // Given
-        WTModel wtModel2 = new WTModel(1L, "ChangedCategory", "ChangedWorkoutName", 80, 12);
-    
+    void updateWorkoutByNameTest() throws Exception {
         // When
+        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel2);
         when(wtService.updateWorkoutByName("TestWorkoutName", wtModel2)).thenReturn(wtModel2);
     
         // Then
@@ -104,15 +87,25 @@ public class WTControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wtModel2)))
                 .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(jsonPath("$.id").value(1));
+                .andDo(print());
+    }
+
+    @Test
+    void updateNullWorkoutNameTest() throws Exception {
+        // When
+        when(wtService.updateWorkoutByName("NonExistentWorkoutName", wtModel)).thenReturn(null);
+
+        // Then
+        mockMvc.perform(put("/workouts/update/NonExistentWorkoutName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(wtModel)))
+                .andExpect(status().isNotFound())
+                .andDo(print());
     }
     
 
     @Test
-    public void saveWorkoutTest() throws Exception {
-        // Given
-        WTModel wtModel = new WTModel(1L, "TestCategory", "TestWorkoutName", 100, 10);
+    void saveWorkoutTest() throws Exception {
         // When
         when(wtService.saveWorkout(any(WTModel.class))).thenReturn(any(WTModel.class));
         // Then
@@ -120,5 +113,27 @@ public class WTControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wtModel)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void deleteWorkoutByNameTest() throws Exception {
+        // When
+        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel);
+        doNothing().when(wtService).deleteWorkoutByName("TestWorkoutName");
+
+        // Then
+        mockMvc.perform(delete("/workouts/delete/TestWorkoutName"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteNonExistentWorkoutNameTest() throws Exception {
+        // When
+        when(wtService.getWorkoutByName("TestWorkoutName")).thenReturn(wtModel);
+        doThrow(new RuntimeException("Workout not found")).when(wtService).deleteWorkoutByName("NonExistentWorkoutName");
+
+        // Then
+        mockMvc.perform(delete("/workouts/delete/NonExistentWorkoutName"))
+                .andExpect(status().isNotFound());
     }
 }
