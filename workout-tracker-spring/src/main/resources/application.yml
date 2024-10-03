@@ -1,11 +1,14 @@
 spring:
     datasource:
         url: jdbc:h2:file:C:/Users/fmint/projects/data/workout-tracker
-        driverClassName: org.h2.Driver
+        driver-class-name: org.h2.Driver
         username: admin
-        password: 
+        password: 8Red-1Ymi!
     jpa:
         database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            hbm2ddl:
+                auto: update
     h2:
         console:
             enabled: true

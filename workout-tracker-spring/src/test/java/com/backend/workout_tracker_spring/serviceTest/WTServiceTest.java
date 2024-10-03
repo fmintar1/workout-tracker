@@ -7,23 +7,19 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-
 import com.backend.workout_tracker_spring.model.WTModel;
 import com.backend.workout_tracker_spring.repository.WTRepository;
 import com.backend.workout_tracker_spring.service.WTService;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class WTServiceTest {
+class WTServiceTest {
     
     @MockBean
     private WTRepository wtRepository;
@@ -34,6 +30,7 @@ public class WTServiceTest {
     private WTModel wtModel;
     private WTModel wtModel2;
     private WTModel wtModel3;
+    private WTModel wtModel4;
 
     @BeforeEach
     public void setup() {
@@ -56,10 +53,16 @@ public class WTServiceTest {
         wtModel3.setWeight(75);
         wtModel3.setReps(15);
         wtRepository.save(wtModel3);
+        wtModel4 = new WTModel();
+        wtModel4.setCategory("ChangedCategory");
+        wtModel4.setWorkoutName("ChangedWorkoutName");
+        wtModel4.setWeight(80);
+        wtModel4.setReps(12);
+        wtRepository.save(wtModel4);
     }
 
     @Test
-    public void getWorkoutByCategory() {
+    void getWorkoutByCategory() {
         //Given
         when(wtRepository.findByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel3));
         //When
@@ -70,7 +73,7 @@ public class WTServiceTest {
     }
 
     @Test
-    public void getWorkoutByName() {
+    void getWorkoutByName() {
         //Given
         when(wtRepository.findByWorkoutName("TestWorkoutName")).thenReturn(wtModel);
         //When
@@ -80,12 +83,49 @@ public class WTServiceTest {
     }
 
     @Test
-    public void getAllWorkouts() {
+    void getAllWorkoutsTest() {
         //Given
         when(wtRepository.findAll()).thenReturn(List.of(wtModel, wtModel2, wtModel3));
         //When
-        List<WTModel> actual = wtService.getAllWTModels();
+        List<WTModel> actual = wtService.getAllWorkouts();
         //Then
         Assertions.assertEquals(3, actual.size());
+    }
+
+    @Test
+    void updateWorkoutByNameTest() {
+        //Given
+        when(wtRepository.findByWorkoutName("TestWorkoutName")).thenReturn(wtModel);
+        when(wtRepository.save(wtModel)).thenReturn(wtModel);
+        when(wtService.updateWorkoutByName("TestWorkoutName", wtModel)).thenReturn(wtModel4);
+        //When
+        WTModel actual = wtService.updateWorkoutByName("TestWorkoutName", wtModel4);
+        //Then
+        Assertions.assertEquals(wtModel4.getWorkoutName(), actual.getWorkoutName());
+        Assertions.assertEquals(wtModel4.getCategory(), actual.getCategory());
+        Assertions.assertEquals(wtModel4.getReps(), actual.getReps());
+        Assertions.assertEquals(wtModel4.getWeight(), actual.getWeight());
+    }
+
+    @Test
+    void saveWorkoutTest() {
+        //Given
+        when(wtRepository.save(wtModel)).thenReturn(wtModel);
+        //When
+        WTModel actual = wtService.saveWorkout(wtModel);
+        //Then
+        Assertions.assertEquals(wtModel.getWorkoutName(), actual.getWorkoutName());
+        Assertions.assertEquals(wtModel.getCategory(), actual.getCategory());
+        Assertions.assertEquals(wtModel.getReps(), actual.getReps());
+        Assertions.assertEquals(wtModel.getWeight(), actual.getWeight());
+    }
+
+    @Test
+    void deleteWorkoutTest() {
+        //When
+        wtService.deleteWorkoutByName("TestCategory");
+
+        //Then
+        Mockito.verify(wtRepository).deleteByWorkoutName("TestCategory");
     }
 }
