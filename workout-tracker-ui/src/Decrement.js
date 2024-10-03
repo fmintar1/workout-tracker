@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import ApiService from './api/ApiService';
 
-export const decrementCounterBy5 = (weight, setWeight) => {
-    setWeight(weight > 0 ? weight - 5 : 0);
-}
+export const decreaseWeightByFive = async (workoutName) => {
+    const data = await ApiService.getWorkoutByName(workoutName);
+    data.weight > 0 ? data.weight -= 5 : data.weight = 0;
+    await ApiService.updateWorkout(workoutName, data);
+};
 
-export const decrementCounter = (count, setCount) => {
-    setCount(count > 0 ? count - 1 : 0);
-}
+export const decreaseReps = async (workoutName) => {
+    const data = await ApiService.getWorkoutByName(workoutName);
+    data.reps > 0 ? data.reps -= 1 : data.reps = 0;
+    await ApiService.updateWorkout(workoutName, data);
+};

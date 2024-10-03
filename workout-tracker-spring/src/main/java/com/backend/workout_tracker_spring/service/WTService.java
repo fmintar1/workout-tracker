@@ -1,9 +1,8 @@
 package com.backend.workout_tracker_spring.service;
 
 import java.util.List;
+import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +28,16 @@ public class WTService {
         return wtRepository.findByWorkoutName(workoutName);
     }
 
+    public List<WTModel> getAllWorkoutsByName(String workoutName) {
+        List<WTModel> wtModelFilter = new ArrayList<>();
+        for(WTModel l : getAllWorkouts()) {
+            if (l.getWorkoutName().equalsIgnoreCase(workoutName)) {
+                wtModelFilter.add(l);
+            }
+        }
+        return wtModelFilter;
+    }
+
     public WTModel updateWorkoutByName(String oldWorkoutName, WTModel wtModel) {
         WTModel oldWtModel = wtRepository.findByWorkoutName(oldWorkoutName);
         oldWtModel.setCategory(wtModel.getCategory());
@@ -44,5 +53,9 @@ public class WTService {
 
     public void deleteWorkoutByName(String workoutName) {
         wtRepository.deleteByWorkoutName(workoutName);
+    }
+
+    public void deleteAllWorkoutsByName(String workoutName) {
+        wtRepository.deleteAllWorkoutsByWorkoutName(workoutName);
     }
 }

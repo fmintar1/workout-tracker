@@ -2,6 +2,7 @@ package com.backend.workout_tracker_spring.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +29,22 @@ public class WTController {
 
     @GetMapping("/all")
     public ResponseEntity<List<WTModel>> getAllWorkouts() {
-        List<WTModel> wtModelList = wtService.getAllWorkouts();
-        return ResponseEntity.ok(wtModelList);
+        return ResponseEntity.ok(wtService.getAllWorkouts());
     }
 
     @GetMapping("/name/{workoutName}")
     public ResponseEntity<WTModel> getWorkoutByName(@PathVariable String workoutName) {
-        WTModel wtModel = wtService.getWorkoutByName(workoutName);
-        return ResponseEntity.ok(wtModel);
+        return ResponseEntity.ok(wtService.getWorkoutByName(workoutName));
+    }
+
+    @GetMapping("/allWorkoutsByName/{workoutName}")
+    public ResponseEntity<List<WTModel>> getAllWorkoutsByName(@PathVariable String workoutName) {
+        return ResponseEntity.ok(wtService.getAllWorkoutsByName(workoutName));
     }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<List<WTModel>> getWorkoutByCategory(@PathVariable String category) {
-        List<WTModel> wtModelList = wtService.getWorkoutByCategory(category);
-        return ResponseEntity.ok(wtModelList);
+        return ResponseEntity.ok(wtService.getWorkoutByCategory(category));
     }
 
     @PutMapping("/update/{workoutName}")
@@ -75,5 +78,15 @@ public class WTController {
         }
         wtService.deleteWorkoutByName(workoutName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/deleteAllByName/{workoutName}")
+    public ResponseEntity<Void> deleteAllWorkoutsByName(@PathVariable String workoutName) {
+        List<WTModel> wtModelList = wtService.getAllWorkoutsByName(workoutName);
+        if (wtModelList == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        wtService.deleteAllWorkoutsByName(workoutName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
