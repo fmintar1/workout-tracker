@@ -3,7 +3,11 @@ import ApiService from "../api/ApiService";
 import { increaseWeightByFive, increaseReps } from "../Increment";
 import { decreaseWeightByFive, decreaseReps } from "../Decrement";
 
-const WorkoutList = ({ workoutsByCategory, onWorkoutSelect, fetchWorkouts }) => {
+const WorkoutList = ({
+  workoutsByCategory,
+  onWorkoutSelect,
+  fetchWorkouts,
+}) => {
   const handleDelete = async (workoutName) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this workout?"
@@ -16,20 +20,43 @@ const WorkoutList = ({ workoutsByCategory, onWorkoutSelect, fetchWorkouts }) => 
   };
 
   const handleDeleteAllByName = async (workoutName) => {
-    const confirmDelete = window.confirm (`Are you sure you want to delete all workouts with the name ${workoutName}?`);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete all workouts with the name ${workoutName}?`
+    );
 
     if (confirmDelete) {
       await ApiService.deleteAllWorkoutsByName(workoutName);
       await fetchWorkouts();
     }
-  }
+  };
+
+  const handleDeleteAllByCategory = async (category) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete all workouts under category ${category}?`
+    );
+
+    if (confirmDelete) {
+      await ApiService.deleteAllWorkoutsWithSameCategory(category);
+      await fetchWorkouts();
+    }
+  };
 
   return (
     <div>
       <h1>Workout List</h1>
+      <div className="Workouts-grid">
       {Object.keys(workoutsByCategory).map((category) => (
         <div key={category}>
-          <h2>{category}</h2>
+          <div className="Category-style">
+            <h2>{category}</h2>
+            <button
+              onClick={async () => {
+                await handleDeleteAllByCategory(category);
+              }}
+            >
+              delete all {category} workouts
+            </button>
+          </div>
           <ul>
             {workoutsByCategory[category].map((workout) => (
               <li key={workout.id}>
@@ -81,16 +108,19 @@ const WorkoutList = ({ workoutsByCategory, onWorkoutSelect, fetchWorkouts }) => 
                 >
                   Delete
                 </button>
-                <button onClick={async () => {
-                  await handleDeleteAllByName(workout.workoutName);
-                }}>
-                  Delete all {workout.workoutName}
+                <button
+                  onClick={async () => {
+                    await handleDeleteAllByName(workout.workoutName);
+                  }}
+                >
+                  Delete all {workout.workoutName} workouts
                 </button>
               </li>
             ))}
           </ul>
         </div>
       ))}
+      </div>
     </div>
   );
 };

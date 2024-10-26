@@ -23,4 +23,9 @@ public interface WTRepository extends JpaRepository <WTModel, Long>{
     @Transactional
     @Query("DELETE FROM WTModel WHERE workoutName = :workoutName")
     void deleteAllWorkoutsByWorkoutName(String workoutName);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM WTModel WHERE category = :category")
+    void deleteAllWorkoutsWithSameCategory(String category);
 }

@@ -44,7 +44,6 @@ const App = () => {
         workoutsByCategory={workoutsByCategory}
         onWorkoutSelect={setSelectedWorkout} 
         fetchWorkouts={fetchWorkouts}/>
-      <button onClick={async () => await fetchWorkouts()}> Render List </button>
     </div>
   );
 };

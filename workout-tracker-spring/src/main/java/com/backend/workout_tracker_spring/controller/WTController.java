@@ -89,4 +89,10 @@ public class WTController {
         wtService.deleteAllWorkoutsByName(workoutName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteAllByCategory/{category}")
+    public ResponseEntity<Void> deleteAllWorkoutsWithSameCategory(@PathVariable String category) {
+        wtService.deleteAllWorkoutsWithSameCategory(category);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

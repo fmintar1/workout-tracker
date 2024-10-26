@@ -66,7 +66,7 @@ class WTServiceTest {
         //Given
         when(wtRepository.findByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel3));
         //When
-        List<WTModel> actual = wtService.getWorkoutByCategory("TestCategory");
+        List<WTModel> actual = wtService.getWorkoutsByCategory("TestCategory");
         //Then
         Assertions.assertEquals(List.of(wtModel, wtModel3), actual);
         Assertions.assertEquals(2, actual.size());

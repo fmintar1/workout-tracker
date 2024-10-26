@@ -36,6 +36,11 @@ const ApiService = {
     deleteAllWorkoutsByName: async (workoutName) => {
         const response = await axios.delete(`${API_URL}/deleteAllByName/${workoutName}`);
         return response.data;
+    },
+
+    deleteAllWorkoutsWithSameCategory: async (category) => {
+        const response = await axios.delete(`${API_URL}/deleteAllByCategory/${category}`);
+        return response.data;
     }
 };
 

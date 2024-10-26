@@ -69,7 +69,7 @@ class WTControllerTest {
     @Test
     void getWorkoutByCategoryTest() throws Exception {
         // When
-        when(wtService.getWorkoutByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel2));
+        when(wtService.getWorkoutsByCategory("TestCategory")).thenReturn(List.of(wtModel, wtModel2));
         // Then
         mockMvc.perform(get("/workouts/category/TestCategory"))
                 .andExpect(status().isOk())

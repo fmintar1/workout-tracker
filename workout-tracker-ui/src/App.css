@@ -6,6 +6,16 @@
   font-size: 20px;
 }
 
+.Category-style {
+  display: flex;
+}
+
+.Workouts-grid {
+  grid-template-columns: repeat(3, 1fr); /* 3 columns, adjust as needed */
+  grid-gap: 10px; /* Space between grid items */
+  padding: 10px;
+}
+
 .Buttons-gap {
   display: flex;
   gap: 10px;

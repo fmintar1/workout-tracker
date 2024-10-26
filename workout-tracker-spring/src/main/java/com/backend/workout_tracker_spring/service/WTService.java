@@ -58,4 +58,8 @@ public class WTService {
     public void deleteAllWorkoutsByName(String workoutName) {
         wtRepository.deleteAllWorkoutsByWorkoutName(workoutName);
     }
+
+    public void deleteAllWorkoutsWithSameCategory(String category) {
+        wtRepository.deleteAllWorkoutsWithSameCategory(category);
+    }
 }
