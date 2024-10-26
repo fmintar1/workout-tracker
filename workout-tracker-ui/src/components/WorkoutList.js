@@ -43,83 +43,91 @@ const WorkoutList = ({
 
   return (
     <div>
-      <h1>Workout List</h1>
+      <h1 className="Horizontal-center">WORKOUT LIST</h1>
       <div className="Workouts-grid">
-      {Object.keys(workoutsByCategory).map((category) => (
-        <div key={category}>
-          <div className="Category-style">
-            <h2>{category}</h2>
-            <button
-              onClick={async () => {
-                await handleDeleteAllByCategory(category);
-              }}
-            >
-              delete all {category} workouts
-            </button>
+        {Object.keys(workoutsByCategory).map((category) => (
+          <div key={category}>
+            <div className="Category-style">
+              <h2>{category}</h2>
+              <button
+                className="Workout-form-input Workout-form-style Delete-all-workouts-style special"
+                onClick={async () => {
+                  await handleDeleteAllByCategory(category);
+                }}
+              >
+                delete all {category} workouts
+              </button>
+            </div>
+            <ul>
+              {workoutsByCategory[category].map((workout) => (
+                <li className="List-style" key={workout.id}>
+                  {workout.workoutName} - {workout.weight} lbs
+                  <button
+                    className="Workout-form-input Non-delete-all-buttons special"
+                    style={{border: '5px solid lime', background: 'lime', color: 'black', fontSize: '25px', padding: '0px 0px', height: 'auto', width: 'auto', lineHeight: '1', alignItems: 'center'}} onClick={async () => {
+                      await increaseWeightByFive(workout.workoutName);
+                      fetchWorkouts();
+                    }}
+                  >
+                    +
+                  </button>
+                  <button
+                    className="Workout-form-input Non-delete-all-buttons special"
+                    onClick={async () => {
+                      await decreaseWeightByFive(workout.workoutName);
+                      fetchWorkouts();
+                    }}
+                  >
+                    -
+                  </button>
+                  - {workout.reps} reps
+                  <button
+                    className="Workout-form-input Non-delete-all-buttons special"
+                    onClick={async () => {
+                      await increaseReps(workout.workoutName);
+                      fetchWorkouts();
+                    }}
+                  >
+                    +
+                  </button>
+                  <button
+                    className="Workout-form-input Non-delete-all-buttons special"
+                    onClick={async () => {
+                      await decreaseReps(workout.workoutName);
+                      fetchWorkouts();
+                    }}
+                  >
+                    -
+                  </button>
+                  <button
+                    className="Workout-form-input Non-delete-all-buttons special"
+                    onClick={async () => {
+                      await onWorkoutSelect(workout);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="Workout-form-input Non-delete-all-buttons special"
+                    onClick={async () => {
+                      await handleDelete(workout.workoutName);
+                    }}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="Delete-all-workouts-same-name Workout-form-input Delete-all-workouts-style special"
+                    onClick={async () => {
+                      await handleDeleteAllByName(workout.workoutName);
+                    }}
+                  >
+                    Delete all {workout.workoutName} workouts
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul>
-            {workoutsByCategory[category].map((workout) => (
-              <li key={workout.id}>
-                {workout.workoutName} - {workout.weight} lbs
-                <button
-                  onClick={async () => {
-                    await increaseWeightByFive(workout.workoutName);
-                    fetchWorkouts();
-                  }}
-                >
-                  +
-                </button>
-                <button
-                  onClick={async () => {
-                    await decreaseWeightByFive(workout.workoutName);
-                    fetchWorkouts();
-                  }}
-                >
-                  -
-                </button>
-                - {workout.reps} reps
-                <button
-                  onClick={async () => {
-                    await increaseReps(workout.workoutName);
-                    fetchWorkouts();
-                  }}
-                >
-                  +
-                </button>
-                <button
-                  onClick={async () => {
-                    await decreaseReps(workout.workoutName);
-                    fetchWorkouts();
-                  }}
-                >
-                  -
-                </button>
-                <button
-                  onClick={async () => {
-                    await onWorkoutSelect(workout);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={async () => {
-                    await handleDelete(workout.workoutName);
-                  }}
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={async () => {
-                    await handleDeleteAllByName(workout.workoutName);
-                  }}
-                >
-                  Delete all {workout.workoutName} workouts
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+        ))}
       </div>
     </div>
   );

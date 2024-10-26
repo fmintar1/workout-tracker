@@ -36,14 +36,17 @@ const App = () => {
 
   return (
     <div>
-      <WorkoutForm
-        selectedWorkout={selectedWorkout}
-        onFormSubmit={handleFormSubmit}
-      />
+      <div className="Horizontal-center">
+        <WorkoutForm
+          selectedWorkout={selectedWorkout}
+          onFormSubmit={handleFormSubmit}
+        />
+      </div>
       <WorkoutList
         workoutsByCategory={workoutsByCategory}
-        onWorkoutSelect={setSelectedWorkout} 
-        fetchWorkouts={fetchWorkouts}/>
+        onWorkoutSelect={setSelectedWorkout}
+        fetchWorkouts={fetchWorkouts}
+      />
     </div>
   );
 };

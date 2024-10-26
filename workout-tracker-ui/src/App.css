@@ -1,3 +1,49 @@
+.Horizontal-center {
+  text-align: center;
+}
+
+.Workout-form-style {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  gap: 2%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.Delete-all-workouts-style.special {
+  background-color: red;
+  color: white;
+  margin-top: 5px;
+  border-color: red;
+  justify-items: right;
+}
+
+.Non-delete-all-buttons.special {
+  background-color: red;
+  color: white;
+  margin-top: 5px;
+  border-color: red;
+  justify-items: right;
+}
+
+.Delete-all-workouts-same-name {
+  margin-left: auto
+}
+
+.List-style {
+  display: flex;
+  border-color: black;
+  border-width: 5px;
+  align-items: center;
+}
+
+.Workout-form-input {
+  border-radius: 10px;
+  border-width: 5px;
+  border-color: black;
+}
+
 .Workout-measurement-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -8,6 +54,8 @@
 
 .Category-style {
   display: flex;
+  align-items: center;
+  padding: 10px;
 }
 
 .Workouts-grid {

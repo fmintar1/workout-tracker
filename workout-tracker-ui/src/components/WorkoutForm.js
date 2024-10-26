@@ -34,37 +34,43 @@ const WorkoutForm = ({ selectedWorkout, onFormSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        required
-      />
-      <input
-        type="text"
-        placeholder="Workout Name"
-        value={workoutName}
-        onChange={(e) => setWorkoutName(e.target.value)}
-        required
-      />
-      <input
-        type="number"
-        placeholder="Weight"
-        value={weight}
-        onChange={(e) => setWeight(e.target.value)}
-        required
-      />
-      <input
-        type="number"
-        placeholder="Reps"
-        value={reps}
-        onChange={(e) => setReps(e.target.value)}
-        required
-      />
-      <button type="submit">
-        {selectedWorkout ? "Update" : "Create"} Workout
-      </button>
+      <div className="Workout-form-style">
+        <input
+          className="Workout-form-input Horizontal-center"
+          type="text"
+          placeholder="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+        />
+        <input
+          className="Workout-form-input Horizontal-center"
+          type="text"
+          placeholder="Workout Name"
+          value={workoutName}
+          onChange={(e) => setWorkoutName(e.target.value)}
+          required
+        />
+        <input
+          className="Workout-form-input Horizontal-center"
+          type="number"
+          placeholder="Weight"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+          required
+        />
+        <input
+          className="Workout-form-input Horizontal-center"
+          type="number"
+          placeholder="Reps"
+          value={reps}
+          onChange={(e) => setReps(e.target.value)}
+          required
+        />
+        <button type="submit" className="Workout-form-input">
+          {selectedWorkout ? "Update" : "Create"} Workout
+        </button>
+      </div>
     </form>
   );
 };
